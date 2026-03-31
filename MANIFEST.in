@@ -1,0 +1,2 @@
+recursive-include streamlit_tour/frontend/build *
+include pyproject.toml

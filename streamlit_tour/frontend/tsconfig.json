@@ -1,0 +1,64 @@
+{
+  "compilerOptions": {
+    // ─── Output target ─────────────────────────────────────────────────────────
+    // ES2020 is widely supported in modern browsers and aligns with
+    // what Vite targets by default. Gives you optional chaining (?.)
+    // and nullish coalescing (??) natively without polyfills.
+    "target": "ES2020",
+
+    // ─── Module system ─────────────────────────────────────────────────────────
+    // "ESNext" lets TypeScript understand static imports/exports.
+    // "bundler" tells tsc that Vite is handling module resolution —
+    // so tsc doesn't need to resolve node_modules itself, Vite does.
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+
+    // ─── Strictness ────────────────────────────────────────────────────────────
+    // Enables all strict checks: noImplicitAny, strictNullChecks, etc.
+    // Strongly recommended — catches most bugs before runtime.
+    "strict": true,
+
+    // Prevents accidental fall-through in switch statements
+    "noFallthroughCasesInSwitch": true,
+
+    // Error on variables/params declared but never read
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+
+    // ─── Interop ───────────────────────────────────────────────────────────────
+    // Allows: import driver from "driver.js"
+    // Without this, you'd need: import * as driver from "driver.js"
+    "esModuleInterop": true,
+
+    // Works with esModuleInterop — ensures consistent behavior across bundlers
+    "allowSyntheticDefaultImports": true,
+
+    // Allows importing .css files in TypeScript (used for driver.js CSS import)
+    // Without this, tsc would error on: import "driver.js/dist/driver.css"
+    "allowArbitraryExtensions": false,
+
+    // ─── Type definitions ──────────────────────────────────────────────────────
+    // "dom" gives you document, HTMLElement, etc.
+    // "dom.iterable" gives you for...of on NodeLists
+    // "esnext" gives you modern JS types (Promise, etc.)
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+
+    // ─── Output ────────────────────────────────────────────────────────────────
+    // tsc won't emit files — Vite handles the actual compilation.
+    // tsc is used ONLY for type checking (the "typecheck" script in package.json)
+    "noEmit": true,
+
+    // ─── Paths ─────────────────────────────────────────────────────────────────
+    "baseUrl": ".",
+    "paths": {
+      // Add path aliases here if your project grows, e.g.:
+      // "@utils/*": ["src/utils/*"]
+    }
+  },
+
+  // Only type-check files inside src/
+  "include": ["src"],
+
+  // Exclude the build output and node_modules
+  "exclude": ["node_modules", "build"]
+}

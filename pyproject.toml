@@ -1,0 +1,43 @@
+[build-system]
+requires = ["setuptools>=77.0.3", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "streamlit_tour"
+version = "0.0.1"
+description = "Streamlit component that implement the wonderful Driver.js library. It allows you to start a tour that takes the user through the component that you want"
+readme = "README.md"
+license = "BSD-3-Clause"
+license-files = ["LICENSE"]
+requires-python = ">=3.10"
+authors = [{ name = "Malo", email = "malo.potereau@gmail.com" }]
+dependencies = [
+    "streamlit>=1.51",
+]
+
+[project.optional-dependencies]
+devel = [
+  "pytest==7.4.0",
+  "playwright==1.48.0",
+  "requests==2.31.0",
+  "pytest-playwright-snapshot==1.0",
+  "pytest-rerunfailures==12.0",
+  "streamlit >= 1.51",  
+]
+
+[tool.setuptools.packages.find]
+include = ["streamlit_tour*"]
+
+[tool.setuptools]
+include-package-data = true
+
+[tool.setuptools.package-data]
+streamlit_tour = [
+  "frontend/build/**/*", 
+  "pyproject.toml"
+  ]
+
+[dependency-groups]
+dev = [
+    "streamlit>=1.55.0",
+]
