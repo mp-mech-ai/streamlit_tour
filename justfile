@@ -17,3 +17,7 @@ bump-and-release part:
     rm -rf dist/
     uv build
     uv run twine upload dist/*
+
+# Start streamlit interface
+launch-example:
+    uv run streamlit run example.py
