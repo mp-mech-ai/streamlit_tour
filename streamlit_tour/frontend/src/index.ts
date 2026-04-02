@@ -142,7 +142,8 @@ const DriverJsComponent = ({
       const wasFinished =
         activeDriver?.isLastStep() ?? false;
       
-      if (oneTimeTour) {
+      // If the user succesfully went to the last step and this is a one-time tour, mark it as seen
+      if (oneTimeTour && wasFinished) {
         markTourAsSeen(key);
       }
 

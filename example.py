@@ -19,17 +19,17 @@ if "tour_done" not in st.session_state:
 if not st.session_state.tour_done:
     if st.button("Start Tour"):
         result = Tour.start(
-        steps=[
-            Tour.bind("driver_step_1", title="Driver.js step 1", desc="This is a description", align="center"),
-            Tour.bind("driver_step_2", title="Driver.js step 2"),
-            Tour.bind("sidebar_btn", title="Driver.js step 3"),
-        ],
-        show_progress=True,
-        animate=True,
-        overlay_opacity=0.75,
-        one_time_tour=True,
-        key=f"presentation_tour",
-    )
+            steps=[
+                Tour.bind("driver_step_1", title="Driver.js step 1", desc="This is a description", align="center"),
+                Tour.bind("driver_step_2", title="Driver.js step 2"),
+                Tour.bind("sidebar_btn", title="Driver.js step 3"),
+            ],
+            show_progress=True,
+            animate=True,
+            overlay_opacity=0.75,
+            one_time_tour=True,
+            key=f"presentation_tour",
+        )
         
         if result.get("finished") or result.get("skipped"):
             st.session_state.tour_done = True

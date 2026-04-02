@@ -82,6 +82,7 @@ class Tour:
                 "skipped": False,
             },
             key=key,
+            height=0,
             on_currentStep_change=on_unused_state_change,
             on_dismissed_change=on_unused_state_change,
             on_finished_change=on_unused_state_change,
