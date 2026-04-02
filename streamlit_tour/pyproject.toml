@@ -1,6 +1,6 @@
 [project]
-name = "streamlit_tour"
-version = "0.0.1"
+name = "streamlit-tour"
+version = "0.0.3"
 
 [[tool.streamlit.component.components]]
 name = "streamlit_tour"

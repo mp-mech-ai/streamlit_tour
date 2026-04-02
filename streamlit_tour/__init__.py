@@ -4,12 +4,11 @@ import streamlit.components.v2 as components
 from importlib.metadata import version
 from typing import Optional, Literal
 
-
 __version__ = version("streamlit_tour")
 
 # Register the component once at import time.
 out = components.component(
-    name="streamlit_tour.streamlit_tour",
+    name="streamlit-tour.streamlit_tour",
     js="index-*.js",                # glob — matches the hashed vite output
 )
 
@@ -25,12 +24,16 @@ class Step:
         self.popover = popover
     
     def to_dict(self):
-        return {
-            "element": self.element,
-            "popover": self.popover
-        }
+        if self.element:
+            return {
+                "element": self.element,
+                "popover": self.popover
+            }
+        else:
+            return {
+                "popover": self.popover
+            }
 
-# TODO : - Build a more user-friendly API (give streamlit component instead of css classnames)
 class Tour:
     def start(
             steps: list[dict[str, Any]],
@@ -98,6 +101,9 @@ class Tour:
             side: Optional[Literal["top", "bottom", "left", "right"]] = None,
             align: Optional[Literal["start", "center", "end"]] = None,
             ):
+        """
+        Binds a streamlit component to a step in the tour.
+        """
         if side is None and align is None:
             return Step(".st-key-" + key, {"title": title, "description": desc})
         elif side is None and align is not None:
@@ -106,3 +112,9 @@ class Tour:
             return Step(".st-key-" + key, {"title": title, "description": desc, "side": side})
         else:
             return Step(".st-key-" + key, {"title": title, "description": desc, "side": side, "align": align})
+    
+    def info(
+            title: str = "Title",
+            desc: str = "Description",
+            ):
+        return Step("", {"title": title, "description": desc})
