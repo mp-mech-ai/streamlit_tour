@@ -30,8 +30,8 @@ interface ComponentProps {
   setTriggerValue: (key: string, value: unknown) => void;
 }
 
-const STYLE_ID = "streamlitTourStyle";
-const TOUR_STORAGE_PREFIX = "streamlitTour_";
+const STYLE_ID = "streamlitTourStyle";  // for z-index overrides
+const TOUR_STORAGE_PREFIX = "streamlitTour_"; // for tracking seen tours
 
 function getTourStorageKey(tourKey: string): string {
   return `${TOUR_STORAGE_PREFIX}${tourKey}`;
@@ -53,6 +53,7 @@ function markTourAsSeen(tourKey: string): void {
   }
 }
 
+// Injects z-index overrides for the sidebar, header, and driver.js popovers
 function injectZIndexOverrides(): void {
   if (document.getElementById(STYLE_ID)) return;
   const style = document.createElement("style");
@@ -81,15 +82,13 @@ function injectZIndexOverrides(): void {
 }
 
 let activeDriver: Driver | null = null;
-
-// Track step locally in JS — never triggers a Streamlit rerun
 let currentStepIndex = 0;
+let hasReachedLastStep = false;
 
 const DriverJsComponent = ({
   data,
   setStateValue,
 }: ComponentProps): (() => void) => {
-
   injectZIndexOverrides();
 
   // Only destroy if there's an active tour — do NOT restart if already running
@@ -98,6 +97,7 @@ const DriverJsComponent = ({
     return () => {};   // ← tour is already running, do nothing on remount
   }
 
+  // Destroy any existing tour
   if (activeDriver) {
     activeDriver.destroy();
     activeDriver = null;
@@ -112,17 +112,21 @@ const DriverJsComponent = ({
     key = "driverjs",
   } = data;
 
+  // If this is a one-time tour and it has already been seen, skip it
   if (oneTimeTour && hasTourBeenSeen(key)) {
     setStateValue("skipped", true);
     return () => {};
   }
 
+  // If there are no steps, do nothing and log it
   if (steps.length === 0) {
     console.warn("[streamlit-driverjs] No steps provided.");
+    setStateValue("skipped", true);
     return () => {};
   }
 
   currentStepIndex = 0;
+  hasReachedLastStep = steps.length <= 1;
 
   const config: Config = {
     showProgress,
@@ -132,6 +136,11 @@ const DriverJsComponent = ({
 
     onNextClick: () => {
       currentStepIndex += 1;
+
+      if (currentStepIndex >= steps.length - 1) {
+        hasReachedLastStep = true;
+      }
+      
       activeDriver?.moveNext();
     },
     onPrevClick: () => {
@@ -139,8 +148,7 @@ const DriverJsComponent = ({
       activeDriver?.movePrevious();
     },
     onDestroyStarted: () => {
-      const wasFinished =
-        activeDriver?.isLastStep() ?? false;
+      const wasFinished = hasReachedLastStep || (activeDriver?.isLastStep() ?? false);
       
       // If the user succesfully went to the last step and this is a one-time tour, mark it as seen
       if (oneTimeTour && wasFinished) {
