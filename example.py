@@ -3,7 +3,8 @@ from streamlit_tour import Tour
 import streamlit_tour
 
 st.title("Driver.js Tour Demo")
-st.write(streamlit_tour.__version__)
+st.write(f"Streamlit Tour version: {streamlit_tour.__version__}")
+
 with st.sidebar:
     st.button("Sidebar button", key="sidebar_btn")
 
