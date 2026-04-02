@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "streamlit_tour"
-version = "0.0.1"
+version = "0.0.2"
 description = "Streamlit component that implement the wonderful Driver.js library. It allows you to start a tour that takes the user through the component that you want"
 readme = "README.md"
 license = "BSD-3-Clause"
