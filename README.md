@@ -3,7 +3,7 @@
 [![License](https://img.shields.io/pypi/l/streamlit-tour)](./LICENSE)
 
 
-# 🚗 streamlit-tour
+# :camera: streamlit-tour
 
 A [Driver.js](https://driverjs.com/) integration for [Streamlit](https://streamlit.io/) - add beautiful, interactive guided tours to your Streamlit apps with a single Python call.
 
@@ -13,12 +13,11 @@ A [Driver.js](https://driverjs.com/) integration for [Streamlit](https://streaml
 
 ## Features
 
-- 🎯 **Bind tour steps to any Streamlit widget** by its `key`
-- 📦 **Sidebar-aware** - highlights sidebar components without z-index glitches
-- 🪟 **Element-free info steps** - show contextual popups not anchored to any component
-- 💾 **One-time tours** - automatically skip tours the user has already completed (via `localStorage`)
-- ↩️ **State feedback** - know exactly when a tour was finished, dismissed, or skipped
-- 🎨 **Configurable** - control overlay opacity, animations, progress indicators, and popover alignment
+- :link: **Bind tour steps to any Streamlit widget** by its `key`
+- :window: **Element-free info steps** - show contextual popups not anchored to any component
+- :white_check_mark: **One-time tours** - automatically skip tours the user has already completed (via `localStorage`)
+- :leftwards_arrow_with_hook: **State feedback** - know exactly when a tour was finished, dismissed, or skipped
+- :art: **Configurable** - control overlay opacity, animations, progress indicators, and popover alignment
 
 
 ## Installation
@@ -142,6 +141,7 @@ Check out `example.py` file for a complete example of usage.
 - [ ] **Step grouping** - define multiple named tours and selectively launch them
 - [ ] **`Tour.reset(key)`** - a utility function to clear the one-time-tour flag from `localStorage`
 - [ ] **Theme support** - CSS variable overrides to match Streamlit's light/dark mode
+- [ ] **Driver.js parameters** - implement all the other Driver.js options
 
 
 
