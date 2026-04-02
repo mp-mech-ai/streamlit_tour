@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "streamlit-tour"
-version = "0.0.3"
+version = "0.1.0"
 description = "Streamlit component that implement the wonderful Driver.js library. It allows you to start a tour that takes the user through the component that you want"
 readme = "README.md"
 license = "BSD-3-Clause"
@@ -49,7 +49,7 @@ Homepage = "https://github.com/mp-mech-ai/streamlit_tour"
 Repository = "https://github.com/mp-mech-ai/streamlit_tour"
 
 [tool.bumpversion]
-current_version = "0.0.3"
+current_version = "0.1.0"
 commit = true
 tag = true
 tag_name = "v{new_version}"
