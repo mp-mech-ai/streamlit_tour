@@ -12,7 +12,7 @@ release-test:
 
 # Bump version, tag, and release
 bump-and-release part:
-    bump-my-version bump {{part}}
+    uv run bump-my-version bump {{part}}
     git push --follow-tags
     rm -rf dist/
     uv build
