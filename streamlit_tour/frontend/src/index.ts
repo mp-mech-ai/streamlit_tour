@@ -19,6 +19,8 @@ interface ComponentData {
   showProgress?: boolean;
   animate?: boolean;
   overlayOpacity?: number;
+  oneTimeTour?: boolean;
+  key?: string;
 }
 
 interface ComponentProps {
@@ -28,7 +30,28 @@ interface ComponentProps {
   setTriggerValue: (key: string, value: unknown) => void;
 }
 
-const STYLE_ID = "streamlit-driverjs-overrides";
+const STYLE_ID = "streamlitTourStyle";
+const TOUR_STORAGE_PREFIX = "streamlitTour_";
+
+function getTourStorageKey(tourKey: string): string {
+  return `${TOUR_STORAGE_PREFIX}${tourKey}`;
+}
+
+function hasTourBeenSeen(tourKey: string): boolean {
+  try {
+    return localStorage.getItem(getTourStorageKey(tourKey)) === "1";
+  } catch {
+    return false; // private browsing or storage blocked
+  }
+}
+
+function markTourAsSeen(tourKey: string): void {
+  try {
+    localStorage.setItem(getTourStorageKey(tourKey), "1");
+  } catch {
+    // silently ignore if storage is unavailable
+  }
+}
 
 function injectZIndexOverrides(): void {
   if (document.getElementById(STYLE_ID)) return;
@@ -85,7 +108,14 @@ const DriverJsComponent = ({
     showProgress = true,
     animate = true,
     overlayOpacity = 0.75,
+    oneTimeTour = false,
+    key = "driverjs",
   } = data;
+
+  if (oneTimeTour && hasTourBeenSeen(key)) {
+    setStateValue("skipped", true);
+    return () => {};
+  }
 
   if (steps.length === 0) {
     console.warn("[streamlit-driverjs] No steps provided.");
@@ -100,26 +130,26 @@ const DriverJsComponent = ({
     overlayOpacity,
     steps: steps as DriveStep[],
 
-    // Track step locally — no Streamlit rerun triggered here
     onNextClick: () => {
       currentStepIndex += 1;
       activeDriver?.moveNext();
     },
-
     onPrevClick: () => {
       currentStepIndex -= 1;
       activeDriver?.movePrevious();
     },
-
-    // Only report to Python when tour is fully over
-    // setStateValue here triggers ONE rerun after the tour ends — that's fine
     onDestroyStarted: () => {
       const wasFinished =
         activeDriver?.isLastStep() ?? false;
+      
+      if (oneTimeTour) {
+        markTourAsSeen(key);
+      }
 
       setStateValue("currentStep", currentStepIndex);
       setStateValue("dismissed", !wasFinished);
-
+      setStateValue("finished", wasFinished);
+      setStateValue("skipped", false);
       activeDriver?.destroy();
       activeDriver = null;
     },

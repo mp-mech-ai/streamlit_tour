@@ -13,10 +13,7 @@ out = components.component(
     js="index-*.js",                # glob — matches the hashed vite output
 )
 
-def on_currentStep_change():
-    pass
-
-def on_dismissed_change():
+def on_unused_state_change():
     pass
 
 class Step:
@@ -41,6 +38,7 @@ class Tour:
             show_progress: bool = True,
             animate: bool = True,
             overlay_opacity: float = 0.75,
+            one_time_tour: bool = False,
             key: str | None = None,
         ):
         """
@@ -63,6 +61,8 @@ class Tour:
         dict with keys:
             - ``currentStep`` (int)  : last step index the user reached
             - ``dismissed``  (bool)  : True when the user closed the tour
+            - ``finished``   (bool)  : True when the tour has been completed
+            - ``skipped``    (bool)  : True when the tour has been skipped because the user has already seen it
         """
         steps_list_of_dict = [step.to_dict() for step in steps]
 
@@ -72,14 +72,20 @@ class Tour:
                 "showProgress": show_progress,
                 "animate": animate,
                 "overlayOpacity": overlay_opacity,
+                "oneTimeTour": one_time_tour,
+                "key": key
             },
             default={
                 "currentStep": 0, 
-                "dismissed": False
+                "dismissed": False,
+                "finished": False,
+                "skipped": False,
             },
             key=key,
-            on_currentStep_change=on_currentStep_change,
-            on_dismissed_change=on_dismissed_change
+            on_currentStep_change=on_unused_state_change,
+            on_dismissed_change=on_unused_state_change,
+            on_finished_change=on_unused_state_change,
+            on_skipped_change=on_unused_state_change
         )
 
         return component_value

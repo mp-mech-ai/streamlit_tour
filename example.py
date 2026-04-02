@@ -13,30 +13,25 @@ st.text_input("Main area input", key="driver_step_1")
 with st.container(key="driver_step_2"):
     st.write("This is a paragraph. " * 10)
 
-if st.button("Start Tour"):
-    st.session_state["tour_active"] = True
-    if "tour_run" not in st.session_state: 
-        st.session_state["tour_run"] = 1 
-    else: 
-        st.session_state["tour_run"] += 1
+if "tour_done" not in st.session_state:
+    st.session_state.tour_done = False
 
-# Mount the component persistently — survives reruns while tour is active
-if st.session_state.get("tour_active"):
-    result = Tour.start(
+if not st.session_state.tour_done:
+    if st.button("Start Tour"):
+        result = Tour.start(
         steps=[
-            Tour.bind("driver_step_1", title="Driver.js step 1"),
+            Tour.bind("driver_step_1", title="Driver.js step 1", desc="This is a description", align="center"),
             Tour.bind("driver_step_2", title="Driver.js step 2"),
             Tour.bind("sidebar_btn", title="Driver.js step 3"),
         ],
         show_progress=True,
         animate=True,
         overlay_opacity=0.75,
-        key=f"driver_tour_{st.session_state['tour_run']}",
+        one_time_tour=True,
+        key=f"presentation_tour",
     )
+        
+        if result.get("finished") or result.get("skipped"):
+            st.session_state.tour_done = True
 
-    # Tour finished — clean up and show final state
-    if result and result.get("dismissed") is not False or result.get("currentStep", 0) > 0:
-        st.session_state["tour_active"] = False
-        st.write("Tour finished at step:", result.get("currentStep"))
-        st.write("Tour dismissed", result.get("dismissed"))
     
