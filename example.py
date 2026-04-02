@@ -28,7 +28,9 @@ if st.session_state.get("tour_active"):
             Tour.bind("sidebar_btn", title="Driver.js step 3"),
         ],
         show_progress=True,
-        key=f"my_tour_{st.session_state['tour_run']}",
+        animate=True,
+        overlay_opacity=0.75,
+        key=f"driver_tour_{st.session_state['tour_run']}",
     )
 
     # Tour finished — clean up and show final state
