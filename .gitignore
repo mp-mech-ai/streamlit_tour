@@ -70,3 +70,6 @@ dist-frontend/
 # Misc
 *.bak
 *.tmp
+
+# Secrets
+.env
