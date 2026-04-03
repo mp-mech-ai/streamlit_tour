@@ -20,8 +20,8 @@ bump-and-release part:
 
 # Run npm dev mode in the background
 run-npm-dev:
-    (cd streamlit_tour/frontend/ && npm install && npm run dev) &
+    cd streamlit_tour/frontend/ && npm install && npm run dev
 
 # Start streamlit interface
 run-example:
-    (uv run streamlit run example.py) &
+    uv run streamlit run example.py
