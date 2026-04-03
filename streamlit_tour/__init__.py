@@ -59,48 +59,61 @@ class TourStatus:
     
 
 class Tour:
-    def start(
-            steps: list[dict[str, Any]],
+    STATE_PREFIX="stTour-"
+    def __init__(
+            self,
+            steps: list,
             *,
+            key: str = "tour",
             show_progress: bool = True,
             animate: bool = True,
             overlay_opacity: float = 0.75,
             one_time_tour: bool = False,
-            key: str | None = None,
         ):
         """
-        Start a Driver.js guided tour.
+        Initialize a Driver.js guided tour.
 
         Parameters
         ----------
         steps : list of Step, i.e. tour.bind(...)
+        key : str, default="tour"
+            Streamlit widget key.
         show_progress : bool
             Show "1/3" step counter in the popover.
         animate : bool
             Animate transitions between steps.
         overlay_opacity : float
             Background overlay opacity (0.0 - 1.0).
-        key : str, optional
-            Streamlit widget key. Change it to re-trigger the tour before a streamlit rerun.
 
         Returns
         -------
-        dict with keys:
-            - ``currentStep`` (int)  : last step index the user reached
-            - ``dismissed``  (bool)  : True when the user closed the tour
-            - ``finished``   (bool)  : True when the tour has been completed
-            - ``skipped``    (bool)  : True when the tour has been skipped because the user has already seen it
+        TourStatus
         """
-        steps_list_of_dict = [step.to_dict() for step in steps]
 
+        self.steps = steps
+        self.key = key
+        self.state_key = f"{self.STATE_PREFIX}-{self.key}-active"
+        self.show_progress = show_progress
+        self.animate = animate
+        self.overlay_opacity = overlay_opacity
+        self.one_time_tour = one_time_tour
+        self.result = self._initialize_render()
+    
+    def _initialize_render(self) -> TourStatus | None:
+        if self.state_key not in st.session_state:
+            st.session_state[self.state_key] = False
+
+        if not st.session_state[self.state_key]:
+            return None
+        
         component_value = out(
             data={
-                "steps": steps_list_of_dict,
-                "showProgress": show_progress,
-                "animate": animate,
-                "overlayOpacity": overlay_opacity,
-                "oneTimeTour": one_time_tour,
-                "key": key
+                "steps": [s.to_dict() for s in self.steps],
+                "showProgress": self.show_progress,
+                "animate": self.animate,
+                "overlayOpacity": self.overlay_opacity,
+                "oneTimeTour": self.one_time_tour,
+                "key": self.key
             },
             default={
                 "currentStep": 0, 
@@ -108,7 +121,7 @@ class Tour:
                 "finished": False,
                 "skipped": False,
             },
-            key=key,
+            key=self.key,
             height=0,
             on_currentStep_change=on_unused_state_change,
             on_dismissed_change=on_unused_state_change,
@@ -116,8 +129,24 @@ class Tour:
             on_skipped_change=on_unused_state_change
         )
 
-        return TourStatus(**component_value)
-    
+        result = TourStatus(**component_value)
+
+        if result.finished or result.dismissed:
+            st.session_state[self.state_key] = False
+            st.rerun()
+                    
+        return result
+
+    def __repr__(self):
+        if self.result:
+            return f"TourStatus(currentStep={self.result.currentStep}, dismissed={self.result.dismissed}, finished={self.result.finished}, skipped={self.result.skipped})"
+        else:
+            return "None"
+        
+    def start(self):
+        st.session_state[self.state_key] = True
+        st.rerun()
+
     def bind(
             key: str,
             title: str = "Title",
