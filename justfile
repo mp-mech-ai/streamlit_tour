@@ -19,5 +19,5 @@ bump-and-release part:
     uv run twine upload dist/*
 
 # Start streamlit interface
-launch-example:
+run-example:
     uv run streamlit run example.py
