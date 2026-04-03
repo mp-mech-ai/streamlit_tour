@@ -8,7 +8,7 @@
 A [Driver.js](https://driverjs.com/) integration for [Streamlit](https://streamlit.io/) - add beautiful, interactive guided tours to your Streamlit apps with a single Python call.
 
 <!-- Replace the line below with your actual GIF -->
-![streamlit-tour demo](https://your-demo-gif-url-here.gif)
+![streamlit-tour demo](assets/streamlit-tour-demo.gif)
 
 
 ## Features
@@ -136,10 +136,10 @@ Check out `example.py` file for a complete example of usage.
 
 ## Roadmap / Possible Improvements
 
-- [ ] **Better output** - make the Tour returns an object instead of a simple dict
-- [ ] **Custom button labels** - override "Next", "Previous", "Done" text per step or globally
-- [ ] **Step grouping** - define multiple named tours and selectively launch them
+- [X] **Better output** - make the Tour returns an object instead of a simple dict
+- [ ] **Tabs and Pages** - make the Tour navigate between tabs and pages (maybe with an intermediate Python actions ?)
 - [ ] **`Tour.reset(key)`** - a utility function to clear the one-time-tour flag from `localStorage`
+- [ ] **Step grouping** - define multiple named tours and selectively launch them
 - [ ] **Theme support** - CSS variable overrides to match Streamlit's light/dark mode
 - [ ] **Driver.js parameters** - implement all the other Driver.js options
 
