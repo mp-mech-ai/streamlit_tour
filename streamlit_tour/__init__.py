@@ -84,10 +84,8 @@ class Tour:
             Animate transitions between steps.
         overlay_opacity : float
             Background overlay opacity (0.0 - 1.0).
-
-        Returns
-        -------
-        TourStatus
+        one_time_tour : bool
+            Whether to show the tour only once.
         """
 
         self.steps = steps
@@ -141,12 +139,13 @@ class Tour:
         if self.result:
             return f"TourStatus(currentStep={self.result.currentStep}, dismissed={self.result.dismissed}, finished={self.result.finished}, skipped={self.result.skipped})"
         else:
-            return "None"
+            return "Tour not started yet"
         
     def start(self):
         st.session_state[self.state_key] = True
         st.rerun()
 
+    @staticmethod
     def bind(
             key: str,
             title: str = "Title",
@@ -166,6 +165,7 @@ class Tour:
         else:
             return Step(".st-key-" + key, {"title": title, "description": desc, "side": side, "align": align})
     
+    @staticmethod
     def info(
             title: str = "Title",
             desc: str = "Description",

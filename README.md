@@ -1,5 +1,6 @@
 [![PyPI version](https://img.shields.io/pypi/v/streamlit-tour)](https://pypi.org/project/streamlit-tour/)
-[![Python versions](https://img.shields.io/pypi/pyversions/streamlit-tour)](https://pypi.org/project/streamlit-tour/)
+[![Python versions](https://img.shields.io/python/required-version-toml?tomlFilePath=https%3A%2F%2Fraw.githubusercontent.com%2Fmp-mech-ai%2Fstreamlit_tour%2Frefs%2Fheads%2Fmaster%2Fpyproject.toml
+)](https://pypi.org/project/streamlit-tour/)
 [![License](https://img.shields.io/pypi/l/streamlit-tour)](./LICENSE)
 
 
@@ -41,13 +42,14 @@ from streamlit_tour import Tour
 st.title("My App")
 st.text_input("Name", key="name_input")
 
-if st.button("Start Tour"):
-    Tour.start(
-        steps=[
-            Tour.bind("name_input", title="Your Name", desc="Enter your name here."),
-            Tour.info(title="That's it!", desc="You're ready to go."),
-        ]
-    )
+tour = Tour(
+    steps=[
+        Tour.bind("name_input", title="Your Name", desc="Enter your name here."),
+        Tour.info(title="That's it!", desc="You're ready to go."),
+    ]
+)
+
+tour.start()
 ```
 
 
@@ -55,20 +57,11 @@ if st.button("Start Tour"):
 
 ### `Tour.start()`
 
-Launches the tour. Call this inside any conditional block (e.g. a button click).
+Launches the tour. Call this inside any conditional block (e.g. a button click) or make sure to specify `one_time_tour=True`.
 
-```python
-result = Tour.start(
-    steps=[...],
-    show_progress=True,       # Show "Step 1/3" counter
-    animate=True,             # Animate transitions between steps
-    overlay_opacity=0.75,     # Background overlay darkness (0.0–1.0)
-    one_time_tour=False,      # If True, skip the tour after first completion
-    key="my_tour",            # Unique key - change it for each tour
-)
-```
 
-**Return value** - a dict with the tour's final state:
+### `Tour.result`
+Stores a TourStatus object with the tour's current state:
 
 | Key            | Type   | Description                                          |
 |----------------|--------|------------------------------------------------------|
@@ -138,8 +131,8 @@ Check out `example.py` file for a complete example of usage.
 
 - [X] **Better output** - make the Tour returns an object instead of a simple dict
 - [ ] **Tabs and Pages** - make the Tour navigate between tabs and pages (maybe with an intermediate Python actions ?)
-- [ ] **`Tour.reset(key)`** - a utility function to clear the one-time-tour flag from `localStorage`
-- [ ] **Step grouping** - define multiple named tours and selectively launch them
+- [ ] **`Tour.reset()`** - a utility function to clear the one-time-tour flag from `localStorage`
+- [X] **Step grouping** - define multiple named tours and selectively launch them
 - [ ] **Theme support** - CSS variable overrides to match Streamlit's light/dark mode
 - [ ] **Driver.js parameters** - implement all the other Driver.js options
 
