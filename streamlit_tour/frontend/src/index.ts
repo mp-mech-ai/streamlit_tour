@@ -140,11 +140,12 @@ const DriverJsComponent = ({
       if (currentStepIndex >= steps.length - 1) {
         hasReachedLastStep = true;
       }
-      
+      setStateValue("currentStep", currentStepIndex);
       activeDriver?.moveNext();
     },
     onPrevClick: () => {
       currentStepIndex -= 1;
+      setStateValue("currentStep", currentStepIndex);
       activeDriver?.movePrevious();
     },
     onDestroyStarted: () => {
@@ -168,7 +169,7 @@ const DriverJsComponent = ({
   activeDriver.drive();
 
   return () => {
-    if (activeDriver) {
+    if (activeDriver && !activeDriver.isActive()) {
       activeDriver.destroy();
       activeDriver = null;
     }

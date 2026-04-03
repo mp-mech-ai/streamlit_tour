@@ -21,7 +21,10 @@ with st.container(key="dataframe_container"):
     st.area_chart(pd.DataFrame(rng(0).standard_normal((20, 3)), columns=["a", "b", "c"]))
 
 if st.button("Start Tour"):
-    result = Tour.start(
+    st.session_state["tour_start"] = True
+
+if st.session_state.get("tour_start", False):
+    result = st.session_state["tour_start"] = Tour.start(
         steps=[
             Tour.bind("area_input", title="Area Input", desc="Streamlit Tour allows you to provide a tour of your site to the user", align="center"),
             Tour.bind("text_container", title="Text Space", desc="It can highlight every part of your application"),
@@ -36,4 +39,5 @@ if st.button("Start Tour"):
         key=f"presentation_tour",
     )
 
+    st.write(result)
     

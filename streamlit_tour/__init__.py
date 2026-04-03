@@ -3,6 +3,7 @@ from typing import Any
 import streamlit.components.v2 as components
 from importlib.metadata import version
 from typing import Optional, Literal
+import streamlit as st
 
 __version__ = version("streamlit_tour")
 
@@ -33,6 +34,29 @@ class Step:
             return {
                 "popover": self.popover
             }
+
+class TourStatus:
+    """
+    Object containing the status of a Driver.js tour.
+    """
+    currentStep: int
+    dismissed: bool
+    finished: bool
+    skipped: bool
+
+    def __init__(self, currentStep: int, dismissed: bool, finished: bool, skipped: bool):
+        self.currentStep = currentStep
+        self.dismissed = dismissed
+        self.finished = finished
+        self.skipped = skipped
+    
+    def to_dict(self):
+        return {
+            "currentStep": self.currentStep,
+            "dismissed": self.dismissed,
+            "finished": self.finished
+        }
+    
 
 class Tour:
     def start(
@@ -92,7 +116,7 @@ class Tour:
             on_skipped_change=on_unused_state_change
         )
 
-        return component_value
+        return TourStatus(**component_value)
     
     def bind(
             key: str,
