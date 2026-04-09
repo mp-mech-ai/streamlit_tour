@@ -134,6 +134,7 @@ const DriverJsComponent = ({
     animate,
     overlayOpacity,
     steps: steps as DriveStep[],
+    // Can be used to rerun the tour at the same step after a refresh/page switch
     onHighlightStarted: () => {
       localStorage.setItem("currentStep", String(currentStepIndex));
     },
