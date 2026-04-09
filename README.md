@@ -130,7 +130,7 @@ Check out `example.py` file for a complete example of usage.
 ## Roadmap / Possible Improvements
 
 - [X] **Better output** - make the Tour returns an object instead of a simple dict
-- [ ] **Tabs and Pages** - make the Tour navigate between tabs and pages (maybe with an intermediate Python actions ?)
+- [ ] **Tabs, Pages and Sidebars** - make the Tour navigate between tabs, pages and handle sidebar state (with onNextClick and onPrevClick hooks).
 - [X] **`Tour.reset()`** - a utility function to clear the one-time-tour flag from `localStorage`
 - [X] **Step grouping** - define multiple named tours and selectively launch them
 - [ ] **Theme support** - CSS variable overrides to match Streamlit's light/dark mode
