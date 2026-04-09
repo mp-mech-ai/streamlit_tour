@@ -49,7 +49,6 @@
     "noEmit": true,
 
     // ─── Paths ─────────────────────────────────────────────────────────────────
-    "baseUrl": ".",
     "paths": {
       // Add path aliases here if your project grows, e.g.:
       // "@utils/*": ["src/utils/*"]
