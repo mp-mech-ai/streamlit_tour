@@ -21,6 +21,7 @@ interface ComponentData {
   overlayOpacity?: number;
   oneTimeTour?: boolean;
   key?: string;
+  tourStorageKey?: string;
 }
 
 interface ComponentProps {
@@ -31,23 +32,18 @@ interface ComponentProps {
 }
 
 const STYLE_ID = "streamlitTourStyle";  // for z-index overrides
-const TOUR_STORAGE_PREFIX = "streamlitTour_"; // for tracking seen tours
 
-function getTourStorageKey(tourKey: string): string {
-  return `${TOUR_STORAGE_PREFIX}${tourKey}`;
-}
-
-function hasTourBeenSeen(tourKey: string): boolean {
+function hasTourBeenSeen(tourStorageKey: string): boolean {
   try {
-    return localStorage.getItem(getTourStorageKey(tourKey)) === "1";
+    return localStorage.getItem(tourStorageKey) === "1";
   } catch {
     return false; // private browsing or storage blocked
   }
 }
 
-function markTourAsSeen(tourKey: string): void {
+function markTourAsSeen(tourStorageKey: string): void {
   try {
-    localStorage.setItem(getTourStorageKey(tourKey), "1");
+    localStorage.setItem(tourStorageKey, "1");
   } catch {
     // silently ignore if storage is unavailable
   }
@@ -111,10 +107,11 @@ const DriverJsComponent = ({
     overlayOpacity = 0.75,
     oneTimeTour = false,
     key = "driverjs",
+    tourStorageKey = "streamlitTour",
   } = data;
 
   // If this is a one-time tour and it has already been seen, skip it
-  if (oneTimeTour && hasTourBeenSeen(key)) {
+  if (oneTimeTour && hasTourBeenSeen(tourStorageKey)) {
     setStateValue("skipped", true);
     return () => {};
   }
@@ -157,7 +154,7 @@ const DriverJsComponent = ({
 
       // If the user succesfully went to the last step and this is a one-time tour, mark it as seen
       if (oneTimeTour && wasFinished) {
-        markTourAsSeen(key);
+        markTourAsSeen(tourStorageKey);
       }
 
       setStateValue("currentStep", currentStepIndex);

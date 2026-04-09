@@ -111,7 +111,8 @@ class Tour:
                 "animate": self.animate,
                 "overlayOpacity": self.overlay_opacity,
                 "oneTimeTour": self.one_time_tour,
-                "key": self.key
+                "key": self.key,
+                "tourStorageKey": "streamlitTour-" + self.key,
             },
             default={
                 "currentStep": 0, 
