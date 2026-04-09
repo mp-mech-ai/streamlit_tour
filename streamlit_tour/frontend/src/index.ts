@@ -91,13 +91,11 @@ const DriverJsComponent = ({
 }: ComponentProps): (() => void) => {
   injectZIndexOverrides();
 
-  console.log("[tour] component called, key:", data.key, "activeDriver:", activeDriver, "isActive:", activeDriver?.isActive());
-
   // Only destroy if there's an active tour — do NOT restart if already running
   // This prevents the rerun loop from killing the tour mid-navigation
   if (activeDriver?.isActive()) {
     console.log("[tour] already active, bailing");
-    return () => {};   // ← tour is already running, do nothing on remount
+    return () => {};
   }
 
   // Destroy any existing tour
@@ -136,10 +134,12 @@ const DriverJsComponent = ({
     animate,
     overlayOpacity,
     steps: steps as DriveStep[],
-
+    onHighlightStarted: () => {
+      localStorage.setItem("currentStep", String(currentStepIndex));
+    },
     onNextClick: () => {
       currentStepIndex += 1;
-
+      
       if (currentStepIndex >= steps.length - 1) {
         hasReachedLastStep = true;
       }
@@ -153,7 +153,6 @@ const DriverJsComponent = ({
     },
     onDestroyStarted: () => {
       const wasFinished = hasReachedLastStep || (activeDriver?.isLastStep() ?? false);
-      console.log("[tour] onDestroyStarted, wasFinished:", wasFinished, "activeDriver:", activeDriver);
 
       // If the user succesfully went to the last step and this is a one-time tour, mark it as seen
       if (oneTimeTour && wasFinished) {
@@ -169,14 +168,11 @@ const DriverJsComponent = ({
     },
   };
 
-  console.log("[tour] starting tour with key:", key);
   activeDriver = driver(config);
   activeDriver.drive();
 
   return () => {
-    console.log("[tour] cleanup called, isActive:", activeDriver?.isActive());
     if (activeDriver && !activeDriver.isActive()) {
-      console.log("[tour] destroying in cleanup");
       activeDriver.destroy();
       activeDriver = null;
     }
