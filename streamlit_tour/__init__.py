@@ -60,6 +60,7 @@ class TourStatus:
 
 class Tour:
     STATE_PREFIX="stTour-"
+
     def __init__(
             self,
             steps: list,
@@ -91,6 +92,7 @@ class Tour:
         self.steps = steps
         self.key = key
         self.state_key = f"{self.STATE_PREFIX}-{self.key}-active"
+        self.reset_key = f"{self.STATE_PREFIX}-{self.key}-reset"
         self.show_progress = show_progress
         self.animate = animate
         self.overlay_opacity = overlay_opacity
@@ -100,6 +102,28 @@ class Tour:
     def _initialize_render(self) -> TourStatus | None:
         if self.state_key not in st.session_state:
             st.session_state[self.state_key] = False
+        
+        if self.reset_key not in st.session_state:
+            st.session_state[self.reset_key] = False
+        
+        if st.session_state[self.reset_key]:
+            out(
+                data={
+                    "steps": [],
+                    "key": self.key,
+                    "tourStorageKey": self.STATE_PREFIX + self.key,
+                    "reset": True,
+                },
+                default={"currentStep": 0, "dismissed": False, "finished": False, "skipped": False},
+                key=self.key,
+                height=0,
+                on_currentStep_change=on_unused_state_change,
+                on_dismissed_change=on_unused_state_change,
+                on_finished_change=on_unused_state_change,
+                on_skipped_change=on_unused_state_change
+            )
+            st.session_state[self.reset_key] = False
+            return None
 
         if not st.session_state[self.state_key]:
             return None
@@ -112,7 +136,8 @@ class Tour:
                 "overlayOpacity": self.overlay_opacity,
                 "oneTimeTour": self.one_time_tour,
                 "key": self.key,
-                "tourStorageKey": "streamlitTour-" + self.key,
+                "tourStorageKey": self.STATE_PREFIX + self.key,
+                "reset": st.session_state[self.reset_key],
             },
             default={
                 "currentStep": 0, 
@@ -146,6 +171,11 @@ class Tour:
         st.session_state[self.state_key] = True
         st.rerun()
 
+    def reset(self):
+        """Clears the one-time-seen flag from localStorage so the tour shows again."""
+        st.session_state[self.reset_key] = True
+        st.rerun()
+
     @staticmethod
     def bind(
             key: str,
@@ -172,3 +202,4 @@ class Tour:
             desc: str = "Description",
             ):
         return Step("", {"title": title, "description": desc})
+    

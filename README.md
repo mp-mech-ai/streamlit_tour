@@ -131,7 +131,7 @@ Check out `example.py` file for a complete example of usage.
 
 - [X] **Better output** - make the Tour returns an object instead of a simple dict
 - [ ] **Tabs and Pages** - make the Tour navigate between tabs and pages (maybe with an intermediate Python actions ?)
-- [ ] **`Tour.reset()`** - a utility function to clear the one-time-tour flag from `localStorage`
+- [X] **`Tour.reset()`** - a utility function to clear the one-time-tour flag from `localStorage`
 - [X] **Step grouping** - define multiple named tours and selectively launch them
 - [ ] **Theme support** - CSS variable overrides to match Streamlit's light/dark mode
 - [ ] **Driver.js parameters** - implement all the other Driver.js options

@@ -31,12 +31,21 @@ tour = Tour(
         show_progress=True,
         animate=True,
         overlay_opacity=0.75,
-        one_time_tour=False,
+        one_time_tour=True,
         key=f"presentation_tour",
     )
 
-if st.button("Start Tour"):
+with st.container(horizontal=True, horizontal_alignment="center"):
+    start = st.button("Start Tour")
+    reset = st.button("Reset Tour")
+
+with st.container(horizontal=True, horizontal_alignment="center"):
+    st.write(tour)
+
+if start:
     tour.start()
 
-st.write(tour)
+if reset:
+    tour.reset()
+
     

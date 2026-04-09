@@ -22,6 +22,7 @@ interface ComponentData {
   oneTimeTour?: boolean;
   key?: string;
   tourStorageKey?: string;
+  reset?: boolean;
 }
 
 interface ComponentProps {
@@ -108,7 +109,14 @@ const DriverJsComponent = ({
     oneTimeTour = false,
     key = "driverjs",
     tourStorageKey = "streamlitTour",
+    reset = false,
   } = data;
+
+  // If a reset has been triggered
+  if (reset) {
+    localStorage.removeItem(tourStorageKey);
+    return () => {};
+  }
 
   // If this is a one-time tour and it has already been seen, skip it
   if (oneTimeTour && hasTourBeenSeen(tourStorageKey)) {
